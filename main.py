@@ -118,12 +118,9 @@ def graph_gaus(col):
     y = heart_df[heart_df['male'] == 0]
     x_data = x[col]
     y_data = y[col]
-
     k_factor = (abs(y_data.mean() - x_data.mean())) / math.sqrt(.5 * ((y_data.std() ** 2) * (x_data.std() ** 2)))
-
     print(f'MALE INFORMATION:\nMean: {x_data.mean()}\nSTD: {x_data.std()}\n\nFEMALE INFORMATION:\nMean: {y_data.mean()}\nSTD: {y_data.std()}\n')
     print(f'K_FACTOR: {k_factor}')
-
     # PLOT MALE DATA
     plt.subplot(1, 2, 1)
     plt.hist(heart_df[col])
@@ -135,7 +132,6 @@ def graph_gaus(col):
     plt.axvline(x_data.mean() - x_data.std(), color='g', linestyle='--')
     plt.title(f'MALE {col}')
     plt.show()
-
     # PLOT FEMALE DATA
     plt.subplot(1, 2, 1)
     plt.hist(heart_df[col])
@@ -149,6 +145,24 @@ def graph_gaus(col):
     plt.show()
 
 
+def compare_gaus(list1, list2, col):
+    # print(x_data, y_data)
+    at_risk = list1[col]
+    not_risk = list2[col]
+    k_factor = (abs(at_risk.mean() - not_risk.mean())) / math.sqrt(.5 * ((at_risk.std() ** 2) * (not_risk.std() ** 2)))
+    print(f'K FACTOR: {k_factor}')
+
+    at_risk.plot.density()
+    plt.axvline(at_risk.mean(), color='r', linestyle='--')
+    plt.axvline(at_risk.mean() + at_risk.std(), color='g', linestyle='--')
+    plt.axvline(at_risk.mean() - at_risk.std(), color='g', linestyle='--')
+    not_risk.plot.density()
+    plt.axvline(not_risk.mean(), color='g', linestyle='--')
+    plt.axvline(not_risk.mean() + not_risk.std(), color='r', linestyle='--')
+    plt.axvline(not_risk.mean() - not_risk.std(), color='r', linestyle='--')
+
+    plt.title(f'AT RISK VS NOT AT RISK')
+    plt.show()
 
 
 
@@ -166,19 +180,20 @@ heart0_df = heart0_df.reset_index()
 # print(heart1_df)
 # print()
 # print(heart0_df)
-plot = False
+plot1 = False
+plot2 = False
 hist_list = ['totChol', 'BMI', 'sysBP', 'diaBP', 'glucose', 'heartRate', 'cigsPerDay']
-if plot:
+if plot1:
     plot_hist(hist_list)
 
 # calc_demographics('education')
 
 # graph_hist(heart_df['age'], 'AGE HISTOGRAM VS GAUSSIAN')
-for col in hist_list:
-    graph_gaus(col)
+if plot2:
+    for col in hist_list:
+        graph_gaus(col)
 
-
-
+compare_gaus(heart1_df, heart0_df, 'glucose')
 
 
 
