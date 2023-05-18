@@ -113,6 +113,45 @@ def graph_hist(col, title):
     plt.title(title)
     plt.show()
 
+def graph_gaus(col):
+    x = heart_df[heart_df['male'] == 1]
+    y = heart_df[heart_df['male'] == 0]
+    x_data = x[col]
+    y_data = y[col]
+
+    k_factor = (abs(y_data.mean() - x_data.mean())) / math.sqrt(.5 * ((y_data.std() ** 2) * (x_data.std() ** 2)))
+
+    print(f'MALE INFORMATION:\nMean: {x_data.mean()}\nSTD: {x_data.std()}\n\nFEMALE INFORMATION:\nMean: {y_data.mean()}\nSTD: {y_data.std()}\n')
+    print(f'K_FACTOR: {k_factor}')
+
+    # PLOT MALE DATA
+    plt.subplot(1, 2, 1)
+    plt.hist(heart_df[col])
+    plt.title(f'MALE {col}')
+    plt.subplot(1, 2, 2)
+    x_data.plot.density()
+    plt.axvline(x_data.mean(), color='r', linestyle='--')
+    plt.axvline(x_data.mean() + x_data.std(), color='g', linestyle='--')
+    plt.axvline(x_data.mean() - x_data.std(), color='g', linestyle='--')
+    plt.title(f'MALE {col}')
+    plt.show()
+
+    # PLOT FEMALE DATA
+    plt.subplot(1, 2, 1)
+    plt.hist(heart_df[col])
+    plt.title(f'FEMALE {col}')
+    plt.subplot(1, 2, 2)
+    y_data.plot.density()
+    plt.axvline(y_data.mean(), color = 'r', linestyle='--')
+    plt.axvline(y_data.mean() + y_data.std(), color='g', linestyle='--')
+    plt.axvline(y_data.mean() - y_data.std(), color='g', linestyle='--')
+    plt.title(f'FEMALE {col}')
+    plt.show()
+
+
+
+
+
 # CREATE THE TWO SEPERATE HEART DF
 heart_df = pd.read_csv('Heart_stuff.csv', delim_whitespace=False)
 one_list = heart_df.index[heart_df['TenYearCHD'] != 1].tolist()
@@ -128,13 +167,15 @@ heart0_df = heart0_df.reset_index()
 # print()
 # print(heart0_df)
 plot = False
+hist_list = ['totChol', 'BMI', 'sysBP', 'diaBP', 'glucose', 'heartRate', 'cigsPerDay']
 if plot:
-    hist_list = ['totChol', 'BMI', 'sysBP', 'diaBP', 'glucose', 'heartRate', 'cigsPerDay']
     plot_hist(hist_list)
 
 # calc_demographics('education')
 
-graph_hist(heart_df['age'], 'AGE HISTOGRAM VS GAUSSIAN')
+# graph_hist(heart_df['age'], 'AGE HISTOGRAM VS GAUSSIAN')
+for col in hist_list:
+    graph_gaus(col)
 
 
 
